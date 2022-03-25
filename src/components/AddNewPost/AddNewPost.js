@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2'
 import { useForm } from 'react-hook-form';
 
 
@@ -10,20 +11,53 @@ const AddNewPost = () => {
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const onSubmit = data => {
+        //Set Loading on UI
         setLoading(true)
+
+        //Genaret Publish date, Blog Thumbnail and New Posting Data
+        const blogPublishDate = new Date().toLocaleDateString()
         let blogThumbnail;
         let blogPostData;
+
+        //Make FormData
         const fileInfo = data.blogImg[0];
         const formData = new FormData();
         formData.append('file', fileInfo);
         formData.append('upload_preset', 'plwdtmz7');
 
+        //Upload Image on cloudinary
         axios.post('https://api.cloudinary.com/v1_1/coremailud/image/upload', formData).then(res => {
+
+            //Get cloudinary image url and set on blogThumbnail
             blogThumbnail = `${res.data.url}`;
+
+            //Delete img formData
             delete data['blogImg'];
-            blogPostData = { ...data, blogThumbnail }
-            console.log(blogPostData)
-            setLoading(false)
+
+            //Make new object with necessary properties
+            blogPostData = { ...data, blogThumbnail, blogPublishDate }
+
+            //Calling api for insert blogpost data on mongodb
+            axios.post('http://localhost:5000/addnewpost', blogPostData)
+                .then(res => {
+                    if (res.data.acknowledged === true) {
+                        setLoading(false)
+                        Swal.fire(
+                            'Good job!',
+                            'You have added new post!',
+                            'success'
+                        )
+                        reset()
+                } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        })
+                    }
+
+
+                })
         })
     };
     return (
@@ -44,12 +78,19 @@ const AddNewPost = () => {
 
                             <input {...register("blogTitle")} className="form-control" placeholder="Blog Title" required />
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
+                            <label className="form-label">Author</label>
+
+                            <input {...register("blogAuthor")} className="form-control" placeholder="Author Name" required />
+                        </div>
+
+                        <div className="col-md-4">
                             <label className="form-label">Category</label>
 
-                            <input {...register("blogCategory")} className="form-control" placeholder="Blog Tag" required />
+                            <input {...register("blogCategory")} className="form-control" placeholder="Category" required />
                         </div>
-                        <div className="col-md-6">
+
+                        <div className="col-md-4">
                             <label className="form-label">Blog Thumbnail</label>
 
                             <input type="file" {...register("blogImg")}
@@ -61,9 +102,9 @@ const AddNewPost = () => {
                             <textarea {...register("blogDescription")} className="form-control" placeholder="Description" rows="6" required />
                         </div>
 
-                       
 
-                        
+
+
                         <div className="col-10">
                             <button type="submit" className="btn btn-primary">Add New Blog</button>
 
@@ -71,11 +112,11 @@ const AddNewPost = () => {
                         </div>
                         <div className="col-2">
                             {
-                                loading&&<div className="spinner-grow text-danger" style={{width: '3rem', height: '3rem'}} role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
+                                loading && <div className="spinner-grow text-danger" style={{ width: '3rem', height: '3rem' }} role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
                             }
-                            
+
                         </div>
 
                     </form>
