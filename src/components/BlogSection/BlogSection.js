@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 
 const BlogSection = () => {
     const [blogPosts, setBlogPosts] = useState([]);
+    const [selectCategory,setSelectCategory]=useState('all')
 
     const [page, setPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
@@ -28,26 +29,88 @@ const BlogSection = () => {
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const onSubmit = data => {
-        console.log(data.search)
         if (data.search) {
             axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&search=${data.search}`)
-            .then(res => {
-                setBlogPosts(res.data.allPosts);
-                const count = res.data.count;
-                const pageNumber = Math.ceil(count / size);
-                setPageCount(pageNumber);
-            })
+                .then(res => {
+                    setBlogPosts(res.data.allPosts);
+                    const count = res.data.count;
+                    const pageNumber = Math.ceil(count / size);
+                    setPageCount(pageNumber);
+                    reset()
+                })
+        } else {
+            setPage(undefined);
         }
     };
+
+    const handelCategory=(getCategory)=>{
+        
+        if (getCategory !== "all") {
+            axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&category=${getCategory}`)
+                .then(res => {
+                    setBlogPosts(res.data.allPosts);
+                    const count = res.data.count;
+                    const pageNumber = Math.ceil(count / size);
+                    setPageCount(pageNumber);
+                    reset()
+                })
+        } else {
+            setPage(undefined);
+        }
+    }
 
     return (
         <section className="container section-divider">
             <div className="row">
-                <div className="col-xl-8 offset-xl-2">
-                    <div className="text-center ">
+                <div className="col-12">
+                    <div className="text-center">
                         <h1>Our Journals for You</h1>
                         <p>We have more than 1k authors. They provide nice and well researched contents for your. Our stories that move you and move with you</p>
+
+                        <div className='category'>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('all')}>
+                                <i className="bi bi-ui-checks"></i>
+                                <span> All</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('cold call')}>
+                                <i className="bi bi-telephone"></i>
+                                <span> Cold Call</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('cold email')}>
+                                <i className="bi bi-envelope"></i>
+                                <span> Cold Email</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('crm')}>
+                                <i className="bi bi-people"></i>
+                                <span> CRM</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('lead generation')}>
+                                <i className="bi bi-person-check"></i>
+                                <span> Lead Generation</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('linkedIn outreach')}>
+                                <i className="bi bi-linkedin"></i>
+                                <span> LinkedIn Outreach</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('sales')}>
+                                <i className="bi bi-cash-coin"></i>
+                                <span> Sales</span>
+                            </div>
+
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('sales tips')}>
+                                <i className="bi bi-receipt"></i>
+                                <span> Sales Tips</span>
+                            </div>
+                        </div>
                     </div>
+
+
 
                     <form className="row" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                         <div className="input-group my-5">
