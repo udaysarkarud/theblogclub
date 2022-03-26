@@ -5,13 +5,18 @@ import ReactPaginate from 'react-paginate';
 import { useForm } from 'react-hook-form';
 
 const BlogSection = () => {
+    //Blog Post Data
     const [blogPosts, setBlogPosts] = useState([]);
-    const [selectCategory,setSelectCategory]=useState('all')
 
+    // Pagination
     const [page, setPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const size = 5;
 
+     // Hook Form
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+
+    // calling api to get blogs data
     useEffect(() => {
         axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}`)
             .then(res => {
@@ -22,12 +27,7 @@ const BlogSection = () => {
             })
     }, [page])
 
-    const handelPagination = (data) => {
-        setPage(data.selected);
-    }
-
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
-
+   // blogs data based on shearch
     const onSubmit = data => {
         if (data.search) {
             axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&search=${data.search}`)
@@ -43,8 +43,8 @@ const BlogSection = () => {
         }
     };
 
-    const handelCategory=(getCategory)=>{
-        
+       // blogs data based on catagory
+    const handelCategory = (getCategory) => {
         if (getCategory !== "all") {
             axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&category=${getCategory}`)
                 .then(res => {
@@ -59,6 +59,11 @@ const BlogSection = () => {
         }
     }
 
+    const handelPagination = (data) => {
+        setPage(data.selected);
+    }
+
+
     return (
         <section className="container section-divider">
             <div className="row">
@@ -68,42 +73,42 @@ const BlogSection = () => {
                         <p>We have more than 1k authors. They provide nice and well researched contents for your. Our stories that move you and move with you</p>
 
                         <div className='category'>
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('all')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('all')}>
                                 <i className="bi bi-ui-checks"></i>
                                 <span> All</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('cold call')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('cold call')}>
                                 <i className="bi bi-telephone"></i>
                                 <span> Cold Call</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('cold email')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('cold email')}>
                                 <i className="bi bi-envelope"></i>
                                 <span> Cold Email</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('crm')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('crm')}>
                                 <i className="bi bi-people"></i>
                                 <span> CRM</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('lead generation')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('lead generation')}>
                                 <i className="bi bi-person-check"></i>
                                 <span> Lead Generation</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('linkedIn outreach')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('linkedIn outreach')}>
                                 <i className="bi bi-linkedin"></i>
                                 <span> LinkedIn Outreach</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('sales')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('sales')}>
                                 <i className="bi bi-cash-coin"></i>
                                 <span> Sales</span>
                             </div>
 
-                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={()=>handelCategory('sales tips')}>
+                            <div className="badge bg-primary text-wrap fs-6 m-2" onClick={() => handelCategory('sales tips')}>
                                 <i className="bi bi-receipt"></i>
                                 <span> Sales Tips</span>
                             </div>

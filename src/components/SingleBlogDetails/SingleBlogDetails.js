@@ -6,12 +6,15 @@ import Swal from 'sweetalert2';
 import SingelCmt from '../SingelCmt/SingelCmt';
 
 const SingleBlogDetails = () => {
+    //get blog id 
     const { bgid } = useParams();
+    const [loading, setLoading] = useState(false)
     const [postDetails, setPostDetails] = useState({})
     const { _id, blogTitle, blogCategory, blogThumbnail, blogDescription, blogAuthor, blogPublishDate } = postDetails
 
-    const [allCatpost, setAllCatpost] = useState([])
+    const [postCmts, setPostCmts] = useState([])
 
+    //Load blog details data based on id
     useEffect(() => {
         axios.get(`http://localhost:5000/singlepostdetails?bgid=${bgid}`)
             .then(res => {
@@ -19,21 +22,22 @@ const SingleBlogDetails = () => {
             })
     }, [])
 
+    //Load blog comment data based on id
     useEffect(() => {
         axios.get(`http://localhost:5000/blogcmts/${bgid}`)
             .then(res => {
-                setAllCatpost(res.data);
-                console.log(allCatpost)
+                setPostCmts(res.data);
             })
-    }, [postDetails])
+    }, [loading])
 
-    const [loading, setLoading] = useState(false)
+    //Hook Form
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+
+    //Post Comment and reload comment api
     const onSubmit = data => {
+        setLoading(true)
         const cmtingDate = new Date().toLocaleDateString()
         const cmtData = { ...data, bgid: _id, cmtingDate }
-        console.log(cmtData)
-
         axios.post('http://localhost:5000/addnewcmt', cmtData)
             .then(res => {
                 if (res.data.acknowledged === true) {
@@ -90,7 +94,7 @@ const SingleBlogDetails = () => {
 
                     <div className="container mt-5">
                         {
-                            allCatpost?.map(postCmt => <SingelCmt key={postCmt._id} cmtData={postCmt} />)
+                            postCmts?.map(postCmt => <SingelCmt key={postCmt._id} cmtData={postCmt} />)
                         }
                     </div>
 
@@ -144,36 +148,8 @@ const SingleBlogDetails = () => {
                 </div>
                 <div className="col-lg-3">
                     <div className="col mb-3">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">Special title treatment</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-
-                            </div>
-                        </div>
+                        <img className='img-fluid' src="https://us.123rf.com/450wm/vectorknight/vectorknight1709/vectorknight170900050/87169958-digital-advertising-ads-social-media-online-marketing-vector-illustration-concept-.jpg" />
                     </div>
-
-                    <div className="col mb-3">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">Special title treatment</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="col mb-3">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">Special title treatment</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div className="col mb-3">
                         <div className="card">
