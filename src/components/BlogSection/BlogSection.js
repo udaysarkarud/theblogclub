@@ -18,7 +18,7 @@ const BlogSection = () => {
 
     // calling api to get blogs data
     useEffect(() => {
-        axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}`)
+        axios.get(`https://rocky-beyond-63969.herokuapp.com/blogposts?page=${page}&&size=${size}`)
             .then(res => {
                 setBlogPosts(res.data.allPosts);
                 const count = res.data.count;
@@ -30,7 +30,7 @@ const BlogSection = () => {
    // blogs data based on shearch
     const onSubmit = data => {
         if (data.search) {
-            axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&search=${data.search}`)
+            axios.get(`https://rocky-beyond-63969.herokuapp.com/blogposts?page=${page}&&size=${size}&&search=${data.search}`)
                 .then(res => {
                     setBlogPosts(res.data.allPosts);
                     const count = res.data.count;
@@ -46,7 +46,7 @@ const BlogSection = () => {
        // blogs data based on catagory
     const handelCategory = (getCategory) => {
         if (getCategory !== "all") {
-            axios.get(`http://localhost:5000/blogposts?page=${page}&&size=${size}&&category=${getCategory}`)
+            axios.get(`https://rocky-beyond-63969.herokuapp.com/blogposts?page=${page}&&size=${size}&&category=${getCategory}`)
                 .then(res => {
                     setBlogPosts(res.data.allPosts);
                     const count = res.data.count;

@@ -16,7 +16,7 @@ const SingleBlogDetails = () => {
 
     //Load blog details data based on id
     useEffect(() => {
-        axios.get(`http://localhost:5000/singlepostdetails?bgid=${bgid}`)
+        axios.get(`https://rocky-beyond-63969.herokuapp.com/singlepostdetails?bgid=${bgid}`)
             .then(res => {
                 setPostDetails(res.data);
             })
@@ -24,7 +24,7 @@ const SingleBlogDetails = () => {
 
     //Load blog comment data based on id
     useEffect(() => {
-        axios.get(`http://localhost:5000/blogcmts/${bgid}`)
+        axios.get(`https://rocky-beyond-63969.herokuapp.com/blogcmts/${bgid}`)
             .then(res => {
                 setPostCmts(res.data);
             })
@@ -38,7 +38,7 @@ const SingleBlogDetails = () => {
         setLoading(true)
         const cmtingDate = new Date().toLocaleDateString()
         const cmtData = { ...data, bgid: _id, cmtingDate }
-        axios.post('http://localhost:5000/addnewcmt', cmtData)
+        axios.post('https://rocky-beyond-63969.herokuapp.com/addnewcmt', cmtData)
             .then(res => {
                 if (res.data.acknowledged === true) {
                     setLoading(false)

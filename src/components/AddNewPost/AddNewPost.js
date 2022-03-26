@@ -38,7 +38,7 @@ const AddNewPost = () => {
             blogPostData = { ...data, blogThumbnail, blogPublishDate }
 
             //Calling api for insert blogpost data on mongodb
-            axios.post('http://localhost:5000/addnewpost', blogPostData)
+            axios.post('https://rocky-beyond-63969.herokuapp.com/addnewpost', blogPostData)
                 .then(res => {
                     if (res.data.acknowledged === true) {
                         setLoading(false)

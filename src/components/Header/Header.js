@@ -8,7 +8,7 @@ const Header = () => {
                 <nav className="navbar navbar-expand-lg navbar-light">
                     <div className="container-fluid">
                         <a className="navbar-brand text-white fw-bolder fs-2" to='/'>
-                            <img className="img-fluid" src="https://youthful-noyce-92cc85.netlify.app/logo-2-retina.png" alt="" width="153" />
+                            the<span className='text-primary'>Blog</span>Club                            
                         </a>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

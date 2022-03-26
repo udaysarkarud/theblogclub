@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -37,15 +38,15 @@ const Footer = () => {
 
                     <div className="col-md-2">
                         <div className="footer-widget">
-                            <h3>Thing Need</h3>
+                            <h3>Company</h3>
                             <ul className="footer-menu">
-                                <li> <a to='/'>GIFT CARDS</a></li>
-                                <li> <a to='/'>PROMOTIONS</a></li>
-                                <li> <a to='/'>FIND A STORE</a></li>
-                                <li> <a to='/'>SIGN UP FOR EMAIL</a></li>
-                                <li> <a to='/'>BECOME A MEMBER</a></li>
-                                <li> <a to='/'>NIKE JOURNAL</a></li>
-                                <li> <a to='/'>SEND US FEEDBACK</a></li>
+                                <li><Link to='/'>Write for us </Link></li>
+                                <li><Link to='/'>About us</Link></li>
+                                <li><Link to='/'>Contact us</Link></li>
+                                <li><Link to='/'>Blog</Link></li>
+                                <li><Link to='/'>Academy</Link></li>
+                                <li><Link to='/'>We're Hiring! </Link></li>
+                                <li><Link to='/'>Help Center</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -54,13 +55,13 @@ const Footer = () => {
                         <div className="footer-widget">
                             <h3>About Sneakers</h3>
                             <ul className="footer-menu">
-                                <li> <a to='/'>About Us</a></li>
-                                <li> <a to='/'>News</a></li>
-                                <li> <a to='/'>Careers</a></li>
-                                <li> <a to='/'>Investors</a></li>
-                                <li> <a to='/'>Purpose</a></li>
-                                <li> <a to='/'>NIKE JOURNAL</a></li>
-                                <li> <a to='/'>Sustainability</a></li>
+                                <li><Link to='/'>Domain Search</Link></li>
+                                <li><Link to='/'>Email Search</Link></li>
+                                <li><Link to='/'>Email Verification</Link></li>
+                                <li><Link to='/'>Cold Email Outreach</Link></li>
+                                <li><Link to='/'>LinkedIn Outreach</Link></li>
+                                <li><Link to='/'>Sales Pipeline</Link></li>
+                                <li><Link to='/'>Meeting Scheduler</Link></li>
                             </ul>
                         </div>
                     </div>
