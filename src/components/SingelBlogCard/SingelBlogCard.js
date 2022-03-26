@@ -9,8 +9,7 @@ const SingelBlogCard = (props) => {
                 <img className="card-img-top img-fluid" src={blogThumbnail} alt="..." />
                 <div className="card-body p-4">
                     <div className="badge bg-primary bg-gradient rounded-pill mb-2">{blogCategory}</div>
-                    <Link className="text-decoration-none link-dark stretched-link" to="redingBlog/1"><h5 className="card-title mb-3">{blogTitle}</h5></Link>
-
+                    <Link className="text-decoration-none link-dark stretched-link" to={`redingBlog/${_id}`}><h5 className="card-title mb-3">{blogTitle}</h5></Link>
                     <p className="card-text mb-0">{blogDescription.slice(0, 100)}</p>
                 </div>
                 <div className="card-footer p-4 pt-0 bg-transparent border-top-0">

@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="addnewpost" element={<AddNewPost />} />
-          <Route path="redingBlog/:id" element={<SingleBlogDetails />} />
+          <Route path="redingBlog/:bgid" element={<SingleBlogDetails />} />
           <Route
             path="*"
             element={

@@ -1,53 +1,148 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import SingelCmt from '../SingelCmt/SingelCmt';
 
 const SingleBlogDetails = () => {
+    const { bgid } = useParams();
+    const [postDetails, setPostDetails] = useState({})
+    const { _id, blogTitle, blogCategory, blogThumbnail, blogDescription, blogAuthor, blogPublishDate } = postDetails
+
+    const [allCatpost, setAllCatpost] = useState([])
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/singlepostdetails?bgid=${bgid}`)
+            .then(res => {
+                setPostDetails(res.data);
+            })
+    }, [])
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/blogcmts/${bgid}`)
+            .then(res => {
+                setAllCatpost(res.data);
+                console.log(allCatpost)
+            })
+    }, [postDetails])
+
+    const [loading, setLoading] = useState(false)
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+    const onSubmit = data => {
+        const cmtingDate = new Date().toLocaleDateString()
+        const cmtData = { ...data, bgid: _id, cmtingDate }
+        console.log(cmtData)
+
+        axios.post('http://localhost:5000/addnewcmt', cmtData)
+            .then(res => {
+                if (res.data.acknowledged === true) {
+                    setLoading(false)
+                    Swal.fire(
+                        'Good job!',
+                        'You have added new comment!',
+                        'success'
+                    )
+                    reset()
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    })
+                }
+
+
+            })
+    };
     return (
         <section className="container section-divider">
             <div className="row mb-5">
                 <div className="col">
                     <div className="text-center ">
-                    <h1 className="display-5 fw-bolder">Never in all their history have men been able truly to conceive of the world as one</h1>
+                        <h1 className="display-5 fw-bolder">{blogTitle}</h1>
+
+                        <div className='category'>
+                            <div className="badge bg-secondary text-wrap fs-6 m-2">
+                                <i className="bi bi-person-circle"></i>
+                                <span> {blogAuthor}</span>
+                            </div>
+
+                            <div className="badge bg-secondary text-wrap fs-6 m-2">
+                                <i className="bi bi-card-list"></i>
+                                <span> {blogCategory}</span>
+                            </div>
+
+                            <div className="badge bg-secondary text-wrap fs-6 m-2">
+                                <i className="bi bi-calendar3"></i>
+                                <span> {blogPublishDate}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="row">
-                <div className="col-lg-9">                   
-                    <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+                <div className="col-lg-9">
+                    <img className="img-fluid" src={blogThumbnail} alt="..." />
+                    <hr />
+                    <p>{blogDescription}</p>
+                    <hr />
 
-                    <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
+                    <div className="container mt-5">
+                        {
+                            allCatpost?.map(postCmt => <SingelCmt key={postCmt._id} cmtData={postCmt} />)
+                        }
+                    </div>
 
-                    <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
+                    <div>
+                        <form className="row g-3" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
 
-                    <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
+                            <div className="col-md-4">
+                                <label className="form-label">Name</label>
 
-                    <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
+                                <input {...register("cmtName")} className="form-control" placeholder="Your Name" required />
+                            </div>
 
-                    <h2 className="section-heading">The Final Frontier</h2>
+                            <div className="col-md-4">
+                                <label className="form-label">Email</label>
 
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-                    <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-                    <blockquote className="blockquote">The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-                    <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-                    <h2 className="section-heading">Reaching for the Stars</h2>
-
-                    <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
+                                <input {...register("cmtEmail")} type="email" className="form-control" placeholder="Your Email" required />
+                            </div>
 
 
-                    <span className="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
+                            <div className="col-md-4">
+                                <label className="form-label">Phone</label>
 
-                    <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
+                                <input {...register("cmtPhone")} type="tel" className="form-control" placeholder="Your Phone" required />
+                            </div>
 
-                    <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
 
-                    <p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://unsplash.com/">Unsplash</a>.</p>
+                            <div className="col-12">
+                                <textarea {...register("cmtDescription")} className="form-control" placeholder="Your Comment" rows="2" required />
+                            </div>
 
+
+
+
+                            <div className="col-10">
+                                <button type="submit" className="btn btn-primary">Add Your Comment</button>
+
+                                <button className="btn btn-dark btn-lg btn-block ms-2" type="reset">Clear fields</button>
+                            </div>
+                            <div className="col-2">
+                                {
+                                    loading && <div className="spinner-grow text-danger" style={{ width: '3rem', height: '3rem' }} role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                }
+
+                            </div>
+
+
+                        </form>
+                    </div>
                 </div>
                 <div className="col-lg-3">
-
                     <div className="col mb-3">
                         <div className="card">
                             <div className="card-body">
